@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PassForge — Política de Privacidade / Privacy Policy</title>
+<style>
+  :root { --teal:#00C4A0; --tealDark:#007A68; --bg:#0f1115; --card:#171a21; --text:#e6e8ec; --muted:#9aa3af; --border:#262b34; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:16px/1.65 -apple-system,Segoe UI,Roboto,Arial,sans-serif; }
+  .wrap { max-width:820px; margin:0 auto; padding:40px 22px 80px; }
+  header { display:flex; align-items:center; gap:14px; margin-bottom:8px; }
+  .logo { width:46px; height:46px; }
+  h1 { font-size:24px; margin:0; }
+  h2 { font-size:20px; margin:38px 0 10px; color:var(--teal); }
+  h3 { font-size:16px; margin:22px 0 6px; }
+  .sub { color:var(--muted); margin:2px 0 0; font-size:14px; }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:8px 22px 22px; margin-top:18px; }
+  a { color:var(--teal); }
+  ul { padding-left:20px; }
+  li { margin:6px 0; }
+  .tag { display:inline-block; background:rgba(0,196,160,.12); color:var(--teal); border:1px solid rgba(0,196,160,.3); border-radius:20px; padding:3px 12px; font-size:13px; }
+  .divider { height:1px; background:var(--border); margin:46px 0; }
+  footer { color:var(--muted); font-size:13px; margin-top:40px; text-align:center; }
+  code { background:#0b0d11; border:1px solid var(--border); border-radius:6px; padding:1px 6px; font-size:13px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <svg class="logo" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#00C4A0"/><stop offset="1" stop-color="#007A68"/>
+      </linearGradient></defs>
+      <path d="M128 15 L220 51 L220 133 Q220 210 128 246 Q36 210 36 133 L36 51 Z" fill="url(#g)"/>
+      <path d="M98 118 a30 30 0 0 1 60 0" fill="none" stroke="#fff" stroke-width="14" stroke-linecap="round"/>
+      <rect x="84" y="118" width="88" height="62" rx="10" fill="#fff"/>
+      <circle cx="128" cy="142" r="10" fill="#007A68"/>
+      <path d="M122 147 h12 l-3 22 h-6 Z" fill="#007A68"/>
+    </svg>
+    <div>
+      <h1>PassForge — Política de Privacidade</h1>
+      <p class="sub">Privacy Policy · Mdk Software</p>
+    </div>
+  </header>
+
+  <p><span class="tag">Última atualização / Last updated: 26/06/2026</span></p>
+
+  <!-- ───────────────────────── PORTUGUÊS ───────────────────────── -->
+  <div class="card">
+    <h2>Português</h2>
+
+    <p>O <strong>PassForge</strong> é um gerador de senhas e gerenciador de cofre local desenvolvido pela <strong>Mdk Software</strong>. Levamos a sua privacidade a sério: o aplicativo foi desenhado para funcionar de forma <strong>offline</strong> e <strong>local</strong>.</p>
+
+    <h3>1. Quais dados coletamos</h3>
+    <p><strong>Nenhum.</strong> O PassForge não coleta, transmite nem armazena dados pessoais em servidores. Não há contas de usuário, login, rastreamento, analytics, anúncios ou perfis de uso.</p>
+
+    <h3>2. Onde seus dados ficam</h3>
+    <ul>
+      <li>As senhas que você gera e os cofres que você cria ficam <strong>somente no seu dispositivo</strong>.</li>
+      <li>Os arquivos de cofre (<code>.pfdb</code>) são <strong>criptografados localmente com AES-256-GCM</strong>, com a chave derivada da sua senha mestre (PBKDF2-HMAC-SHA256). Sua senha mestre <strong>nunca é armazenada</strong>.</li>
+      <li>Preferências (tema, idioma, tempos de bloqueio) são guardadas localmente no seu dispositivo.</li>
+    </ul>
+
+    <h3>3. Uso de internet</h3>
+    <p>O aplicativo só acessa a internet para <strong>um</strong> recurso opcional: a <strong>verificação de vazamentos</strong> (Have I Been Pwned). Nesse caso, usamos o método de <em>k-anonymity</em>: a senha é convertida em um hash SHA-1 e <strong>apenas os 5 primeiros caracteres</strong> desse hash são enviados ao serviço — <strong>a senha completa nunca sai do dispositivo</strong>. Se você não usar esse recurso, o app não faz nenhuma conexão de rede.</p>
+
+    <h3>4. Compartilhamento com terceiros</h3>
+    <p>Não compartilhamos, vendemos nem transferimos dados a terceiros. O único serviço externo contatado é a API pública do Have I Been Pwned (<a href="https://haveibeenpwned.com/Privacy">política deles</a>), e somente do modo descrito acima.</p>
+
+    <h3>5. Segurança</h3>
+    <p>Criptografia AES-256-GCM autenticada, derivação de chave PBKDF2 com iterações configuráveis, limpeza automática da área de transferência, bloqueio automático por inatividade e ao minimizar, e trava por PIN opcional.</p>
+
+    <h3>6. Crianças</h3>
+    <p>O aplicativo não é direcionado a crianças e não coleta dados de ninguém.</p>
+
+    <h3>7. Contato</h3>
+    <p>Dúvidas sobre esta política: <a href="mailto:dinhudinhu@icloud.com">dinhudinhu@icloud.com</a> (Mdk Software).</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ───────────────────────── ENGLISH ───────────────────────── -->
+  <div class="card">
+    <h2>English</h2>
+
+    <p><strong>PassForge</strong> is a password generator and local vault manager developed by <strong>Mdk Software</strong>. We take your privacy seriously: the app is designed to work <strong>offline</strong> and <strong>locally</strong>.</p>
+
+    <h3>1. What data we collect</h3>
+    <p><strong>None.</strong> PassForge does not collect, transmit, or store any personal data on servers. There are no user accounts, logins, tracking, analytics, ads, or usage profiles.</p>
+
+    <h3>2. Where your data lives</h3>
+    <ul>
+      <li>The passwords you generate and the vaults you create stay <strong>only on your device</strong>.</li>
+      <li>Vault files (<code>.pfdb</code>) are <strong>encrypted locally with AES-256-GCM</strong>, using a key derived from your master password (PBKDF2-HMAC-SHA256). Your master password is <strong>never stored</strong>.</li>
+      <li>Preferences (theme, language, lock timeouts) are stored locally on your device.</li>
+    </ul>
+
+    <h3>3. Internet usage</h3>
+    <p>The app accesses the internet only for <strong>one</strong> optional feature: the <strong>breach check</strong> (Have I Been Pwned). For this we use the <em>k-anonymity</em> method: the password is hashed with SHA-1 and <strong>only the first 5 characters</strong> of that hash are sent to the service — <strong>the full password never leaves your device</strong>. If you don't use this feature, the app makes no network connections.</p>
+
+    <h3>4. Third-party sharing</h3>
+    <p>We do not share, sell, or transfer data to third parties. The only external service contacted is the public Have I Been Pwned API (<a href="https://haveibeenpwned.com/Privacy">their policy</a>), and only as described above.</p>
+
+    <h3>5. Security</h3>
+    <p>Authenticated AES-256-GCM encryption, PBKDF2 key derivation with configurable iterations, automatic clipboard clearing, auto-lock on inactivity and on minimize, and optional PIN lock.</p>
+
+    <h3>6. Children</h3>
+    <p>The app is not directed at children and does not collect data from anyone.</p>
+
+    <h3>7. Contact</h3>
+    <p>Questions about this policy: <a href="mailto:dinhudinhu@icloud.com">dinhudinhu@icloud.com</a> (Mdk Software).</p>
+  </div>
+
+  <footer>© 2026 Mdk Software · PassForge</footer>
+</div>
+</body>
+</html>
