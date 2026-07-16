@@ -12,6 +12,10 @@ JS: HELPERS(qs,eh/ea,b64,toast) · STATE(ST, CFG em localStorage `pf_cfg`) · I1
 
 Texto: linha mágica `PFDB1\n` + JSON `{v:1, iter, salt, iv, ct}` (base64). Payload = JSON do cofre `{entries:[...]}` cifrado com AES-256-GCM; chave via PBKDF2-HMAC-SHA256 (600k iterações padrão, configurável). Qualquer mudança no formato incrementa `v` e mantém leitura das versões anteriores.
 
+## CI/Release
+
+`.github/workflows/ci.yml` roda `npm test` em PRs e na main. `.github/workflows/release.yml` (tag `v*` ou manual) gera Windows (instalador NSIS + portable) e Mac (dmg + zip), sem assinatura, como artefatos do workflow.
+
 ## Teste
 
 `npm test` roda `test/crypto-roundtrip.mjs` (Node ≥ 20, WebCrypto): round-trip, senha errada, adulteração de ciphertext e magic inválido. Rodar sempre que tocar no bloco CRYPTO.

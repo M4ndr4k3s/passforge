@@ -1,0 +1,66 @@
+name: Build releases
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Teste de criptografia
+        run: npm test
+
+      - name: Gerar instalador e portable (sem assinatura)
+        run: npx electron-builder --win --publish never
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+
+      - name: Publicar artefatos
+        uses: actions/upload-artifact@v4
+        with:
+          name: PassForge-windows
+          path: |
+            dist/*.exe
+          if-no-files-found: error
+
+  mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Teste de criptografia
+        run: npm test
+
+      - name: Gerar dmg e zip (sem assinatura)
+        run: npx electron-builder --mac --x64 --publish never
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+
+      - name: Publicar artefatos
+        uses: actions/upload-artifact@v4
+        with:
+          name: PassForge-mac
+          path: |
+            dist/*.dmg
+            dist/*-mac.zip
+          if-no-files-found: error
