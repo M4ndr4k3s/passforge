@@ -6,7 +6,7 @@ App em **arquivo único** `src/app.html` (HTML+CSS+JS vanilla, sem build), deskt
 ## Mapa do arquivo (marcadores `// ══ NOME ══` ou `/* ══ NOME ══ */`)
 
 CSS: TOKENS(temas dark/light) · LOCK SCREEN · APP LAYOUT · GENERATOR/METER · MODAL · TOAST
-JS: HELPERS(qs,eh/ea,b64,toast) · STATE(ST, CFG em localStorage `pf_cfg`) · I18N(dicionário pt/en, T(), applyI18n) · CRYPTO(deriveKey/encryptVault/decryptVault) · LOCK/UNLOCK(autolock) · PIN(sessão: softLock/pinUnlock, cofre cifrado em memória c/ chave do PIN, 3 erros → senha mestre, nunca persiste) · SAVE(FS Access API+fallback download) · ENTRIES(renderList/editEntry) · CLIPBOARD(copySec c/ limpeza) · GERADOR(genPassword/genPassphrase/strength) · SETTINGS · MODAL · INIT
+JS: HELPERS(qs,eh/ea,b64,toast) · STATE(ST, CFG em localStorage `pf_cfg`) · I18N(dicionário pt/en, T(), applyI18n) · CRYPTO(deriveKey/encryptVault/decryptVault) · LOCK/UNLOCK(autolock) · PIN(sessão: softLock/pinUnlock, cofre cifrado em memória c/ chave do PIN, 3 erros → senha mestre, nunca persiste) · SAVE(FS Access API+fallback download) · ENTRIES(renderList/editEntry) · CLIPBOARD(copySec c/ limpeza) · GERADOR(genPassword/genPassphrase/strength) · HIBP(checkPwned, k-anonymity + Add-Padding, consentimento 1x em `pf_cfg.hibpOk`) · SETTINGS · MODAL · INIT
 
 ## Formato `.pfdb`
 
