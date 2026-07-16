@@ -13,9 +13,13 @@
   },
   "build": {
     "appId": "com.mdksoftware.passforge",
-    "files": ["main.js", "src/**"],
+    "files": ["main.js", "preload.js", "src/**"],
     "win": { "target": ["nsis", "portable"] },
-    "mac": { "target": ["dmg", "zip"] }
+    "mac": { "target": ["dmg", "zip"] },
+    "publish": [{ "provider": "github", "owner": "M4ndr4k3s", "repo": "passforge" }]
+  },
+  "dependencies": {
+    "electron-updater": "^6.3.9"
   },
   "devDependencies": {
     "electron": "^31.0.0",
