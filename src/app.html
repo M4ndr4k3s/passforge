@@ -114,6 +114,19 @@ input[type=range]{padding:0;border:none;background:none}
       <button class="btn pri grow" onclick="createVault()" data-i18n="create">Criar</button>
     </div>
   </div>
+
+  <div class="card hidden" id="lkPin">
+    <h2 data-i18n="pinTitle">Desbloqueio rápido</h2>
+    <label data-i18n="pinEnter">PIN</label>
+    <input type="password" id="pinIn" inputmode="numeric" autocomplete="off" onkeydown="if(event.key==='Enter')pinUnlock()">
+    <p class="muted" id="pinErr" style="color:var(--danger)"></p>
+    <div class="row" style="margin-top:12px">
+      <button class="btn pri grow" onclick="pinUnlock()" data-i18n="unlock">Desbloquear</button>
+    </div>
+    <p class="muted" style="text-align:center;margin:14px 0 0">
+      <a href="#" style="color:var(--teal)" onclick="pinToFull();return false" data-i18n="usePass">Usar senha mestre</a>
+    </p>
+  </div>
 </div>
 
 <!-- ══ APP ══ -->
@@ -126,7 +139,7 @@ input[type=range]{padding:0;border:none;background:none}
     <button class="btn sm" onclick="openGen()" data-i18n="generator">Gerador</button>
     <button class="btn sm" onclick="saveVault()" data-i18n="save">Salvar</button>
     <button class="btn sm" onclick="openSet()">⚙</button>
-    <button class="btn sm" onclick="lockNow()" data-i18n="lock">🔒</button>
+    <button class="btn sm" id="btnLock" onclick="ST.pin?softLock():lockNow()" data-i18n="lock">🔒</button>
   </div>
   <div id="main">
     <div id="list"></div>
@@ -149,15 +162,15 @@ const unb64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
 function toast(msg){const t=qs('toast');t.textContent=msg;t.classList.add('on');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('on'),2200)}
 
 // ══ STATE ══
-const ST={vault:null,key:null,salt:null,iter:0,fileName:'cofre.pfdb',fileHandle:null,rawFile:null,sel:null,dirty:false,lockT:null};
+const ST={vault:null,key:null,salt:null,iter:0,fileName:'cofre.pfdb',fileHandle:null,rawFile:null,sel:null,dirty:false,lockT:null,pin:null};
 const CFG_KEY='pf_cfg';
 const CFG=Object.assign({theme:'dark',lang:'pt',iter:600000,autolockMin:5,clipSec:20},JSON.parse(localStorage.getItem(CFG_KEY)||'{}'));
 function saveCfg(){localStorage.setItem(CFG_KEY,JSON.stringify(CFG))}
 
 // ══ I18N ══
 const I18N={
- pt:{openVault:'Abrir cofre',noFile:'Nenhum arquivo selecionado.',chooseFile:'Escolher .pfdb',masterPass:'Senha mestre',unlock:'Desbloquear',createNew:'Criar cofre novo',newVault:'Novo cofre',confirmPass:'Confirmar senha mestre',back:'Voltar',create:'Criar',search:'Buscar…',newEntry:'+ Nova entrada',generator:'Gerador',save:'Salvar',lock:'🔒',selectEntry:'Selecione ou crie uma entrada.',title:'Título',user:'Usuário',pass:'Senha',url:'URL',notes:'Notas',copy:'Copiar',show:'Mostrar',hide:'Ocultar',del:'Excluir',saveEntry:'Salvar entrada',cancel:'Cancelar',copied:'Copiado — limpa em {s}s',clipCleared:'Área de transferência limpa',saved:'Cofre salvo',wrongPass:'Senha incorreta ou arquivo corrompido.',passMismatch:'As senhas não coincidem.',passShort:'Use ao menos 8 caracteres.',needFile:'Escolha um arquivo .pfdb.',confirmDel:'Excluir esta entrada?',locked:'Cofre bloqueado por inatividade',genTitle:'Gerador de senhas',length:'Comprimento',upper:'Maiúsculas',lower:'Minúsculas',digits:'Dígitos',symbols:'Símbolos',passphrase:'Frase-senha',words:'Palavras',regen:'Gerar novamente',use:'Usar no formulário',settings:'Configurações',theme:'Tema',dark:'Escuro',light:'Claro',langL:'Idioma',autolock:'Bloqueio automático (min, 0=off)',clip:'Limpar clipboard após (s)',iterL:'Iterações PBKDF2 (aplicado no próximo salvar)',close:'Fechar',unsaved:'Há alterações não salvas — salve antes de bloquear ou elas serão perdidas.',strength:['Muito fraca','Fraca','Razoável','Forte','Excelente']},
- en:{openVault:'Open vault',noFile:'No file selected.',chooseFile:'Choose .pfdb',masterPass:'Master password',unlock:'Unlock',createNew:'Create new vault',newVault:'New vault',confirmPass:'Confirm master password',back:'Back',create:'Create',search:'Search…',newEntry:'+ New entry',generator:'Generator',save:'Save',lock:'🔒',selectEntry:'Select or create an entry.',title:'Title',user:'Username',pass:'Password',url:'URL',notes:'Notes',copy:'Copy',show:'Show',hide:'Hide',del:'Delete',saveEntry:'Save entry',cancel:'Cancel',copied:'Copied — clears in {s}s',clipCleared:'Clipboard cleared',saved:'Vault saved',wrongPass:'Wrong password or corrupted file.',passMismatch:'Passwords do not match.',passShort:'Use at least 8 characters.',needFile:'Choose a .pfdb file.',confirmDel:'Delete this entry?',locked:'Vault locked due to inactivity',genTitle:'Password generator',length:'Length',upper:'Uppercase',lower:'Lowercase',digits:'Digits',symbols:'Symbols',passphrase:'Passphrase',words:'Words',regen:'Regenerate',use:'Use in form',settings:'Settings',theme:'Theme',dark:'Dark',light:'Light',langL:'Language',autolock:'Auto-lock (min, 0=off)',clip:'Clear clipboard after (s)',iterL:'PBKDF2 iterations (applied on next save)',close:'Close',unsaved:'Unsaved changes — save before locking or they will be lost.',strength:['Very weak','Weak','Fair','Strong','Excellent']}
+ pt:{openVault:'Abrir cofre',noFile:'Nenhum arquivo selecionado.',chooseFile:'Escolher .pfdb',masterPass:'Senha mestre',unlock:'Desbloquear',createNew:'Criar cofre novo',newVault:'Novo cofre',confirmPass:'Confirmar senha mestre',back:'Voltar',create:'Criar',search:'Buscar…',newEntry:'+ Nova entrada',generator:'Gerador',save:'Salvar',lock:'🔒',selectEntry:'Selecione ou crie uma entrada.',title:'Título',user:'Usuário',pass:'Senha',url:'URL',notes:'Notas',copy:'Copiar',show:'Mostrar',hide:'Ocultar',del:'Excluir',saveEntry:'Salvar entrada',cancel:'Cancelar',copied:'Copiado — limpa em {s}s',clipCleared:'Área de transferência limpa',saved:'Cofre salvo',wrongPass:'Senha incorreta ou arquivo corrompido.',passMismatch:'As senhas não coincidem.',passShort:'Use ao menos 8 caracteres.',needFile:'Escolha um arquivo .pfdb.',confirmDel:'Excluir esta entrada?',locked:'Cofre bloqueado por inatividade',genTitle:'Gerador de senhas',length:'Comprimento',upper:'Maiúsculas',lower:'Minúsculas',digits:'Dígitos',symbols:'Símbolos',passphrase:'Frase-senha',words:'Palavras',regen:'Gerar novamente',use:'Usar no formulário',settings:'Configurações',theme:'Tema',dark:'Escuro',light:'Claro',langL:'Idioma',autolock:'Bloqueio automático (min, 0=off)',clip:'Limpar clipboard após (s)',iterL:'Iterações PBKDF2 (aplicado no próximo salvar)',close:'Fechar',unsaved:'Há alterações não salvas — salve antes de bloquear ou elas serão perdidas.',strength:['Muito fraca','Fraca','Razoável','Forte','Excelente'],pinTitle:'Desbloqueio rápido',pinEnter:'PIN',usePass:'Usar senha mestre',pinLabel:'PIN de desbloqueio rápido (4–8 dígitos; vale só até fechar o app)',pinBad:'PIN deve ter de 4 a 8 dígitos.',pinSet:'PIN ativado',pinOff:'Desativar PIN',pinOffDone:'PIN desativado',pinWrong:'PIN incorreto — {n} tentativa(s) restante(s)',pinLockedOut:'Muitas tentativas — use a senha mestre'},
+ en:{openVault:'Open vault',noFile:'No file selected.',chooseFile:'Choose .pfdb',masterPass:'Master password',unlock:'Unlock',createNew:'Create new vault',newVault:'New vault',confirmPass:'Confirm master password',back:'Back',create:'Create',search:'Search…',newEntry:'+ New entry',generator:'Generator',save:'Save',lock:'🔒',selectEntry:'Select or create an entry.',title:'Title',user:'Username',pass:'Password',url:'URL',notes:'Notes',copy:'Copy',show:'Show',hide:'Hide',del:'Delete',saveEntry:'Save entry',cancel:'Cancel',copied:'Copied — clears in {s}s',clipCleared:'Clipboard cleared',saved:'Vault saved',wrongPass:'Wrong password or corrupted file.',passMismatch:'Passwords do not match.',passShort:'Use at least 8 characters.',needFile:'Choose a .pfdb file.',confirmDel:'Delete this entry?',locked:'Vault locked due to inactivity',genTitle:'Password generator',length:'Length',upper:'Uppercase',lower:'Lowercase',digits:'Digits',symbols:'Symbols',passphrase:'Passphrase',words:'Words',regen:'Regenerate',use:'Use in form',settings:'Settings',theme:'Theme',dark:'Dark',light:'Light',langL:'Language',autolock:'Auto-lock (min, 0=off)',clip:'Clear clipboard after (s)',iterL:'PBKDF2 iterations (applied on next save)',close:'Close',unsaved:'Unsaved changes — save before locking or they will be lost.',strength:['Very weak','Weak','Fair','Strong','Excellent'],pinTitle:'Quick unlock',pinEnter:'PIN',usePass:'Use master password',pinLabel:'Quick-unlock PIN (4–8 digits; lasts until the app closes)',pinBad:'PIN must be 4 to 8 digits.',pinSet:'PIN enabled',pinOff:'Disable PIN',pinOffDone:'PIN disabled',pinWrong:'Wrong PIN — {n} attempt(s) left',pinLockedOut:'Too many attempts — use the master password'}
 };
 const T=k=>I18N[CFG.lang][k]??k;
 function applyI18n(){
@@ -218,19 +231,62 @@ function enterApp(){
 }
 function lockNow(){
   if(ST.dirty&&!confirm(T('unsaved')))return;
-  ST.key=null;ST.vault=null;ST.sel=null;ST.dirty=false;
+  ST.key=null;ST.vault=null;ST.sel=null;ST.dirty=false;ST.pin=null;
+  clearTimeout(ST.lockT);
   qs('app').classList.remove('on');qs('lock').style.display='block';
   qs('detail').classList.add('hidden');qs('empty').classList.remove('hidden');
+  qs('lkPin').classList.add('hidden');qs('lkNew').classList.add('hidden');qs('lkOpen').classList.remove('hidden');
   qs('lkPass').value='';
 }
 // autolock por inatividade + ao minimizar
 function armAutolock(){
   clearTimeout(ST.lockT);
   if(!CFG.autolockMin||!ST.key)return;
-  ST.lockT=setTimeout(()=>{if(ST.key){ST.dirty=false;lockNow();toast(T('locked'))}},CFG.autolockMin*60000);
+  ST.lockT=setTimeout(()=>{if(ST.key){if(ST.pin)softLock();else{ST.dirty=false;lockNow()}toast(T('locked'))}},CFG.autolockMin*60000);
 }
 ['click','keydown','mousemove'].forEach(ev=>document.addEventListener(ev,()=>ST.key&&armAutolock(),{passive:true}));
-document.addEventListener('visibilitychange',()=>{if(document.hidden&&ST.key&&CFG.autolockMin&&!ST.dirty)lockNow()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&ST.key&&CFG.autolockMin){if(ST.pin)softLock();else if(!ST.dirty)lockNow()}});
+
+// ══ PIN (desbloqueio rápido de sessão — nunca persiste em disco) ══
+const PIN_ITER=100000;
+async function setPin(code){
+  const salt=crypto.getRandomValues(new Uint8Array(16));
+  ST.pin={key:await deriveKey(code,salt,PIN_ITER),salt,blob:null,tries:0};
+}
+// cifra o cofre com a chave do PIN, descarta o cofre da memória e mostra a tela de PIN
+async function softLock(){
+  if(!ST.pin||!ST.key)return lockNow();
+  if(qs('modal'))closeModal();
+  const iv=crypto.getRandomValues(new Uint8Array(12));
+  const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},ST.pin.key,enc.encode(JSON.stringify({vault:ST.vault,dirty:ST.dirty})));
+  ST.pin.blob={iv,ct};ST.pin.key=null;ST.pin.tries=0;
+  ST.vault=null;ST.sel=null;
+  clearTimeout(ST.lockT);
+  qs('app').classList.remove('on');qs('lock').style.display='block';
+  qs('detail').classList.add('hidden');qs('empty').classList.remove('hidden');
+  qs('lkOpen').classList.add('hidden');qs('lkNew').classList.add('hidden');qs('lkPin').classList.remove('hidden');
+  qs('pinIn').value='';qs('pinErr').textContent='';
+  qs('pinIn').focus();
+}
+async function pinUnlock(){
+  const err=qs('pinErr');err.textContent='';
+  try{
+    const key=await deriveKey(qs('pinIn').value,ST.pin.salt,PIN_ITER);
+    const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:ST.pin.blob.iv},key,ST.pin.blob.ct);
+    const s=JSON.parse(dec.decode(pt));
+    ST.vault=s.vault;ST.dirty=s.dirty;
+    ST.pin.key=key;ST.pin.blob=null;ST.pin.tries=0;
+    qs('lkPin').classList.add('hidden');qs('lkOpen').classList.remove('hidden');
+    enterApp();
+  }catch(e){
+    qs('pinIn').value='';
+    ST.pin.tries++;
+    if(ST.pin.tries>=3){toast(T('pinLockedOut'));pinToFull()}
+    else err.textContent=T('pinWrong').replace('{n}',3-ST.pin.tries);
+  }
+}
+// abandona a sessão de PIN e exige a senha mestre (alterações não salvas são descartadas)
+function pinToFull(){ST.pin=null;ST.dirty=false;lockNow()}
 
 // ══ SAVE (.pfdb via FS Access API, fallback download) ══
 async function saveVault(){
@@ -390,12 +446,22 @@ function openSet(){
     <label>${T('autolock')}</label><input type="number" id="sLock" min="0" max="120" value="${CFG.autolockMin}">
     <label>${T('clip')}</label><input type="number" id="sClip" min="5" max="120" value="${CFG.clipSec}">
     <label>${T('iterL')}</label><input type="number" id="sIter" min="100000" step="100000" value="${CFG.iter}">
+    <label>${T('pinLabel')}</label>
+    <div class="row">
+      <input id="sPin" type="password" inputmode="numeric" autocomplete="off" class="grow" placeholder="${ST.pin?'••••':''}">
+      ${ST.pin?`<button class="btn sm" onclick="ST.pin=null;qs('sPin').placeholder='';toast(T('pinOffDone'))">${T('pinOff')}</button>`:''}
+    </div>
     <div class="row" style="margin-top:14px">
       <button class="btn pri" onclick="applySet()">OK</button>
       <button class="btn" onclick="closeModal()">${T('cancel')}</button>
     </div>`);
 }
-function applySet(){
+async function applySet(){
+  const pin=qs('sPin').value.trim();
+  if(pin){
+    if(!/^\d{4,8}$/.test(pin))return toast(T('pinBad'));
+    await setPin(pin);toast(T('pinSet'));
+  }
   CFG.theme=qs('sTheme').value;CFG.lang=qs('sLang').value;
   CFG.autolockMin=+qs('sLock').value;CFG.clipSec=+qs('sClip').value;CFG.iter=+qs('sIter').value;
   saveCfg();applyTheme();applyI18n();armAutolock();closeModal();

@@ -15,7 +15,7 @@ function createWindow() {
 
   // bloqueio ao minimizar fica a cargo do app (visibilitychange dispara no hide)
   win.on('minimize', () => win.webContents.executeJavaScript(
-    'if(typeof ST!=="undefined"&&ST.key&&CFG.autolockMin&&!ST.dirty)lockNow();', true
+    'if(typeof ST!=="undefined"&&ST.key&&CFG.autolockMin){if(ST.pin)softLock();else if(!ST.dirty)lockNow()}', true
   ).catch(() => {}));
 }
 
