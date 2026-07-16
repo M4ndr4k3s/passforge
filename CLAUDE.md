@@ -6,7 +6,7 @@ App em **arquivo único** `src/app.html` (HTML+CSS+JS vanilla, sem build), deskt
 ## Mapa do arquivo (marcadores `// ══ NOME ══` ou `/* ══ NOME ══ */`)
 
 CSS: TOKENS(temas dark/light) · LOCK SCREEN · APP LAYOUT · GENERATOR/METER · MODAL · TOAST
-JS: HELPERS(qs,eh/ea,b64,toast) · STATE(ST, CFG em localStorage `pf_cfg`) · I18N(dicionário pt/en, T(), applyI18n) · CRYPTO(deriveKey/encryptVault/decryptVault) · LOCK/UNLOCK(autolock) · PIN(sessão: softLock/pinUnlock, cofre cifrado em memória c/ chave do PIN, 3 erros → senha mestre, nunca persiste) · SAVE(FS Access API+fallback download) · ENTRIES(renderList/editEntry) · CLIPBOARD(copySec c/ limpeza) · GERADOR(genPassword/genPassphrase/strength) · TOTP(b32dec/parseTotp/totpCode RFC6238, campo opcional `totp` na entrada — segredo base32 ou otpauth://, totpTick atualiza a cada 1s) · HIBP(checkPwned, k-anonymity + Add-Padding, consentimento 1x em `pf_cfg.hibpOk`) · CSV(exportCsv c/ aviso de texto puro, importCsv/parseCsv — cabeçalhos PassForge/Chrome/Firefox/Bitwarden) · AUDITORIA(openAudit: fracas score≤2, repetidas, >1 ano por `updated`, vazias — linhas clicáveis abrem a entrada) · SETTINGS · MODAL · INIT
+JS: HELPERS(qs,eh/ea,b64,toast) · STATE(ST, CFG em localStorage `pf_cfg`) · I18N(dicionário pt/en, T(), applyI18n) · CRYPTO(deriveKey/encryptVault/decryptVault) · LOCK/UNLOCK(autolock) · PIN(sessão: softLock/pinUnlock, cofre cifrado em memória c/ chave do PIN, 3 erros → senha mestre, nunca persiste) · SAVE(FS Access API+fallback download) · ENTRIES(renderList/editEntry) · CLIPBOARD(copySec c/ limpeza) · GERADOR(genPassword/genPassphrase/strength) · TOTP(b32dec/parseTotp/totpCode RFC6238, campo opcional `totp` na entrada — segredo base32 ou otpauth://, totpTick atualiza a cada 1s) · HIBP(checkPwned, k-anonymity + Add-Padding, consentimento 1x em `pf_cfg.hibpOk`) · CSV(exportCsv c/ aviso de texto puro, importCsv/parseCsv — cabeçalhos PassForge/Chrome/Firefox/Bitwarden) · AUDITORIA(openAudit: fracas score≤2, repetidas, >1 ano por `updated`, vazias — linhas clicáveis abrem a entrada) · ATUALIZAÇÃO(checkUpdate via `window.pfDesktop` do preload.js; main.js: electron-updater no Windows, aviso+link no Mac; publish via release.yml em tag v*) · SETTINGS · MODAL · INIT
 
 ## Formato `.pfdb`
 
@@ -24,7 +24,7 @@ Texto: linha mágica `PFDB1\n` + JSON `{v:1, iter, salt, iv, ct}` (base64). Payl
 
 - **Zero coleta de dados**: sem contas, login, analytics, anúncios ou telemetria.
 - **Tudo local**: cofres `.pfdb` criptografados com AES-256-GCM; chave derivada da senha mestre via PBKDF2-HMAC-SHA256. A senha mestre nunca é armazenada.
-- **Única conexão de rede permitida**: verificação de vazamentos via Have I Been Pwned com k-anonymity (apenas os 5 primeiros caracteres do hash SHA-1 saem do dispositivo), e somente se o usuário acionar.
+- **Únicas conexões de rede permitidas** (ambas somente se o usuário acionar): verificação de vazamentos via Have I Been Pwned com k-anonymity (apenas os 5 primeiros caracteres do hash SHA-1 saem do dispositivo) e verificação de atualizações via GitHub Releases (nenhum dado ou identificador enviado).
 - Qualquer feature que contrarie esses pontos exige atualização da política de privacidade **antes** do merge.
 
 ## Convenções

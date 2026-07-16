@@ -64,10 +64,15 @@
     </ul>
 
     <h3>3. Uso de internet</h3>
-    <p>O aplicativo só acessa a internet para <strong>um</strong> recurso opcional: a <strong>verificação de vazamentos</strong> (Have I Been Pwned). Nesse caso, usamos o método de <em>k-anonymity</em>: a senha é convertida em um hash SHA-1 e <strong>apenas os 5 primeiros caracteres</strong> desse hash são enviados ao serviço — <strong>a senha completa nunca sai do dispositivo</strong>. Se você não usar esse recurso, o app não faz nenhuma conexão de rede.</p>
+    <p>O aplicativo só acessa a internet para <strong>dois</strong> recursos opcionais, ambos acionados <strong>exclusivamente por você</strong>:</p>
+    <ul>
+      <li><strong>Verificação de vazamentos</strong> (Have I Been Pwned): usamos o método de <em>k-anonymity</em> — a senha é convertida em um hash SHA-1 e <strong>apenas os 5 primeiros caracteres</strong> desse hash são enviados ao serviço. <strong>A senha completa nunca sai do dispositivo.</strong></li>
+      <li><strong>Verificação de atualizações</strong> (somente no app desktop): ao clicar em "Verificar atualizações" nas configurações, o app consulta as versões publicadas no GitHub. Essa consulta é uma requisição HTTP comum (que, como qualquer acesso à web, expõe seu endereço IP ao servidor) e <strong>não envia nenhum dado seu, do cofre ou identificador</strong>.</li>
+    </ul>
+    <p>Se você não usar esses recursos, o app não faz nenhuma conexão de rede.</p>
 
     <h3>4. Compartilhamento com terceiros</h3>
-    <p>Não compartilhamos, vendemos nem transferimos dados a terceiros. O único serviço externo contatado é a API pública do Have I Been Pwned (<a href="https://haveibeenpwned.com/Privacy">política deles</a>), e somente do modo descrito acima.</p>
+    <p>Não compartilhamos, vendemos nem transferimos dados a terceiros. Os únicos serviços externos contatados são a API pública do Have I Been Pwned (<a href="https://haveibeenpwned.com/Privacy">política deles</a>) e o GitHub (<a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">política deles</a>) para baixar atualizações, e somente do modo descrito acima.</p>
 
     <h3>5. Segurança</h3>
     <p>Criptografia AES-256-GCM autenticada, derivação de chave PBKDF2 com iterações configuráveis, limpeza automática da área de transferência, bloqueio automático por inatividade e ao minimizar, e trava por PIN opcional.</p>
@@ -98,10 +103,15 @@
     </ul>
 
     <h3>3. Internet usage</h3>
-    <p>The app accesses the internet only for <strong>one</strong> optional feature: the <strong>breach check</strong> (Have I Been Pwned). For this we use the <em>k-anonymity</em> method: the password is hashed with SHA-1 and <strong>only the first 5 characters</strong> of that hash are sent to the service — <strong>the full password never leaves your device</strong>. If you don't use this feature, the app makes no network connections.</p>
+    <p>The app accesses the internet only for <strong>two</strong> optional features, both triggered <strong>exclusively by you</strong>:</p>
+    <ul>
+      <li><strong>Breach check</strong> (Have I Been Pwned): we use the <em>k-anonymity</em> method — the password is hashed with SHA-1 and <strong>only the first 5 characters</strong> of that hash are sent to the service. <strong>The full password never leaves your device.</strong></li>
+      <li><strong>Update check</strong> (desktop app only): clicking "Check for updates" in the settings queries the versions published on GitHub. This is a plain HTTP request (which, like any web access, exposes your IP address to the server) and <strong>sends no personal data, vault data, or identifiers</strong>.</li>
+    </ul>
+    <p>If you don't use these features, the app makes no network connections.</p>
 
     <h3>4. Third-party sharing</h3>
-    <p>We do not share, sell, or transfer data to third parties. The only external service contacted is the public Have I Been Pwned API (<a href="https://haveibeenpwned.com/Privacy">their policy</a>), and only as described above.</p>
+    <p>We do not share, sell, or transfer data to third parties. The only external services contacted are the public Have I Been Pwned API (<a href="https://haveibeenpwned.com/Privacy">their policy</a>) and GitHub (<a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">their policy</a>) for downloading updates, and only as described above.</p>
 
     <h3>5. Security</h3>
     <p>Authenticated AES-256-GCM encryption, PBKDF2 key derivation with configurable iterations, automatic clipboard clearing, auto-lock on inactivity and on minimize, and optional PIN lock.</p>
