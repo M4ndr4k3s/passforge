@@ -6,7 +6,7 @@ App em **arquivo único** `src/app.html` (HTML+CSS+JS vanilla, sem build), deskt
 ## Mapa do arquivo (marcadores `// ══ NOME ══` ou `/* ══ NOME ══ */`)
 
 CSS: TOKENS(temas dark/light) · LOCK SCREEN · APP LAYOUT · GENERATOR/METER · MODAL · TOAST
-JS: HELPERS(qs,eh/ea,b64,toast) · STATE(ST, CFG em localStorage `pf_cfg`) · I18N(dicionário pt/en, T(), applyI18n) · CRYPTO(deriveKey/encryptVault/decryptVault) · LOCK/UNLOCK(autolock) · PIN(sessão: softLock/pinUnlock, cofre cifrado em memória c/ chave do PIN, 3 erros → senha mestre, nunca persiste) · SAVE(FS Access API+fallback download) · ENTRIES(renderList/editEntry) · CLIPBOARD(copySec c/ limpeza) · GERADOR(genPassword/genPassphrase/strength) · HIBP(checkPwned, k-anonymity + Add-Padding, consentimento 1x em `pf_cfg.hibpOk`) · CSV(exportCsv c/ aviso de texto puro, importCsv/parseCsv — cabeçalhos PassForge/Chrome/Firefox/Bitwarden) · SETTINGS · MODAL · INIT
+JS: HELPERS(qs,eh/ea,b64,toast) · STATE(ST, CFG em localStorage `pf_cfg`) · I18N(dicionário pt/en, T(), applyI18n) · CRYPTO(deriveKey/encryptVault/decryptVault) · LOCK/UNLOCK(autolock) · PIN(sessão: softLock/pinUnlock, cofre cifrado em memória c/ chave do PIN, 3 erros → senha mestre, nunca persiste) · SAVE(FS Access API+fallback download) · ENTRIES(renderList/editEntry) · CLIPBOARD(copySec c/ limpeza) · GERADOR(genPassword/genPassphrase/strength) · TOTP(b32dec/parseTotp/totpCode RFC6238, campo opcional `totp` na entrada — segredo base32 ou otpauth://, totpTick atualiza a cada 1s) · HIBP(checkPwned, k-anonymity + Add-Padding, consentimento 1x em `pf_cfg.hibpOk`) · CSV(exportCsv c/ aviso de texto puro, importCsv/parseCsv — cabeçalhos PassForge/Chrome/Firefox/Bitwarden) · SETTINGS · MODAL · INIT
 
 ## Formato `.pfdb`
 
@@ -18,7 +18,7 @@ Texto: linha mágica `PFDB1\n` + JSON `{v:1, iter, salt, iv, ct}` (base64). Payl
 
 ## Teste
 
-`npm test` roda `test/crypto-roundtrip.mjs` (Node ≥ 20, WebCrypto): round-trip, senha errada, adulteração de ciphertext e magic inválido. Rodar sempre que tocar no bloco CRYPTO.
+`npm test` roda `test/crypto-roundtrip.mjs` (round-trip, senha errada, adulteração de ciphertext, magic inválido) e `test/totp.mjs` (vetores RFC 6238 SHA-1/256/512). Node ≥ 20, WebCrypto. Rodar sempre que tocar nos blocos CRYPTO ou TOTP.
 
 ## Princípios de produto (invioláveis)
 

@@ -8,7 +8,7 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "test": "node test/crypto-roundtrip.mjs",
+    "test": "node test/crypto-roundtrip.mjs && node test/totp.mjs",
     "dist": "electron-builder"
   },
   "build": {
