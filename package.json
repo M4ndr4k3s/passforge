@@ -1,0 +1,24 @@
+{
+  "name": "passforge",
+  "productName": "PassForge",
+  "version": "0.1.0",
+  "description": "Gerador de senhas e cofre local criptografado — offline-first",
+  "author": "Mdk Software",
+  "license": "MIT",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "node test/crypto-roundtrip.mjs",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "appId": "com.mdksoftware.passforge",
+    "files": ["main.js", "src/**"],
+    "win": { "target": ["nsis", "portable"] },
+    "mac": { "target": ["dmg", "zip"] }
+  },
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
+  }
+}

@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="pt-br" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PassForge</title>
+<style>
+/* ══ TOKENS ══ */
+:root{
+  --teal:#00C4A0; --tealDark:#007A68;
+  --bg:#0f1115; --card:#171a21; --card2:#1d2129; --text:#e6e8ec; --muted:#9aa3af;
+  --border:#262b34; --danger:#e5484d; --warn:#f5a524; --ok:#00C4A0;
+}
+[data-theme=light]{
+  --bg:#f4f6f8; --card:#ffffff; --card2:#eef1f4; --text:#1a1d23; --muted:#5b6570; --border:#d8dee5;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 -apple-system,Segoe UI,Roboto,Arial,sans-serif}
+button{font:inherit;cursor:pointer}
+input,select,textarea{font:inherit;color:var(--text);background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;outline:none;width:100%}
+input:focus,select:focus,textarea:focus{border-color:var(--teal)}
+label{font-size:13px;color:var(--muted);display:block;margin:10px 0 4px}
+.btn{background:var(--card2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px 14px}
+.btn:hover{border-color:var(--teal)}
+.btn.pri{background:linear-gradient(135deg,var(--teal),var(--tealDark));border:none;color:#fff;font-weight:600}
+.btn.danger{color:var(--danger);border-color:var(--danger)}
+.btn.sm{padding:4px 10px;font-size:13px}
+.row{display:flex;gap:8px;align-items:center}
+.grow{flex:1}
+.muted{color:var(--muted);font-size:13px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px}
+h1{font-size:22px;margin:0} h2{font-size:17px;margin:0 0 10px}
+.hidden{display:none!important}
+
+/* ══ LOCK SCREEN ══ */
+#lock{max-width:440px;margin:8vh auto;padding:0 16px}
+#lock .logo{display:flex;align-items:center;gap:12px;margin-bottom:22px;justify-content:center}
+#lock svg{width:52px;height:52px}
+#lock .card{margin-top:14px}
+
+/* ══ APP LAYOUT ══ */
+#app{display:none;height:100vh;flex-direction:column}
+#app.on{display:flex}
+#topbar{display:flex;gap:10px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--card)}
+#topbar .brand{font-weight:700;color:var(--teal);display:flex;gap:8px;align-items:center}
+#topbar svg{width:24px;height:24px}
+#search{max-width:340px}
+#main{display:flex;flex:1;min-height:0}
+#list{width:340px;border-right:1px solid var(--border);overflow-y:auto;padding:8px}
+.ent{padding:10px 12px;border-radius:10px;cursor:pointer;border:1px solid transparent}
+.ent:hover{background:var(--card2)}
+.ent.sel{background:var(--card2);border-color:var(--teal)}
+.ent .t{font-weight:600}
+.ent .u{font-size:13px;color:var(--muted)}
+#detail{flex:1;overflow-y:auto;padding:20px;max-width:640px}
+#empty{flex:1;display:flex;align-items:center;justify-content:center;color:var(--muted)}
+
+/* ══ GENERATOR / METER ══ */
+#genOut{font-family:ui-monospace,Consolas,monospace;font-size:16px;letter-spacing:.5px;word-break:break-all}
+.meter{height:6px;border-radius:3px;background:var(--card2);margin-top:8px;overflow:hidden}
+.meter i{display:block;height:100%;width:0;transition:width .2s;background:var(--danger)}
+.meter.m2 i{background:var(--warn)} .meter.m3 i{background:#8bc34a} .meter.m4 i{background:var(--ok)}
+.chk{display:inline-flex;align-items:center;gap:6px;margin-right:14px;font-size:14px}
+.chk input{width:auto}
+input[type=range]{padding:0;border:none;background:none}
+
+/* ══ MODAL ══ */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:50}
+.modal .card{width:min(480px,92vw);max-height:88vh;overflow-y:auto}
+
+/* ══ TOAST ══ */
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--teal);border-radius:10px;padding:10px 18px;z-index:99;opacity:0;pointer-events:none;transition:opacity .25s}
+#toast.on{opacity:1}
+</style>
+</head>
+<body>
+
+<!-- ══ LOCK SCREEN ══ -->
+<div id="lock">
+  <div class="logo">
+    <svg viewBox="0 0 256 256"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00C4A0"/><stop offset="1" stop-color="#007A68"/></linearGradient></defs><path d="M128 15 L220 51 L220 133 Q220 210 128 246 Q36 210 36 133 L36 51 Z" fill="url(#g)"/><path d="M98 118 a30 30 0 0 1 60 0" fill="none" stroke="#fff" stroke-width="14" stroke-linecap="round"/><rect x="84" y="118" width="88" height="62" rx="10" fill="#fff"/><circle cx="128" cy="142" r="10" fill="#007A68"/><path d="M122 147 h12 l-3 22 h-6 Z" fill="#007A68"/></svg>
+    <h1>PassForge</h1>
+  </div>
+
+  <div class="card" id="lkOpen">
+    <h2 data-i18n="openVault">Abrir cofre</h2>
+    <p class="muted" id="lkFileName" data-i18n="noFile">Nenhum arquivo selecionado.</p>
+    <div class="row">
+      <button class="btn" onclick="qs('lkFile').click()" data-i18n="chooseFile">Escolher .pfdb</button>
+      <input type="file" id="lkFile" accept=".pfdb" class="hidden">
+    </div>
+    <label data-i18n="masterPass">Senha mestre</label>
+    <input type="password" id="lkPass" autocomplete="off">
+    <p class="muted" id="lkErr" style="color:var(--danger)"></p>
+    <div class="row" style="margin-top:12px">
+      <button class="btn pri grow" onclick="unlock()" data-i18n="unlock">Desbloquear</button>
+    </div>
+    <p class="muted" style="margin-bottom:0;text-align:center;margin-top:14px">
+      <a href="#" style="color:var(--teal)" onclick="newVaultUI();return false" data-i18n="createNew">Criar cofre novo</a>
+    </p>
+  </div>
+
+  <div class="card hidden" id="lkNew">
+    <h2 data-i18n="newVault">Novo cofre</h2>
+    <label data-i18n="masterPass">Senha mestre</label>
+    <input type="password" id="nvPass" autocomplete="off">
+    <label data-i18n="confirmPass">Confirmar senha mestre</label>
+    <input type="password" id="nvPass2" autocomplete="off">
+    <div class="meter" id="nvMeter"><i></i></div>
+    <p class="muted" id="nvErr" style="color:var(--danger)"></p>
+    <div class="row" style="margin-top:12px">
+      <button class="btn" onclick="qs('lkNew').classList.add('hidden');qs('lkOpen').classList.remove('hidden')" data-i18n="back">Voltar</button>
+      <button class="btn pri grow" onclick="createVault()" data-i18n="create">Criar</button>
+    </div>
+  </div>
+
+  <div class="card hidden" id="lkPin">
+    <h2 data-i18n="pinTitle">Desbloqueio rápido</h2>
+    <label data-i18n="pinEnter">PIN</label>
+    <input type="password" id="pinIn" inputmode="numeric" autocomplete="off" onkeydown="if(event.key==='Enter')pinUnlock()">
+    <p class="muted" id="pinErr" style="color:var(--danger)"></p>
+    <div class="row" style="margin-top:12px">
+      <button class="btn pri grow" onclick="pinUnlock()" data-i18n="unlock">Desbloquear</button>
+    </div>
+    <p class="muted" style="text-align:center;margin:14px 0 0">
+      <a href="#" style="color:var(--teal)" onclick="pinToFull();return false" data-i18n="usePass">Usar senha mestre</a>
+    </p>
+  </div>
+</div>
+
+<!-- ══ APP ══ -->
+<div id="app">
+  <div id="topbar">
+    <span class="brand"><svg viewBox="0 0 256 256"><path d="M128 15 L220 51 L220 133 Q220 210 128 246 Q36 210 36 133 L36 51 Z" fill="#00C4A0"/></svg>PassForge</span>
+    <input id="search" data-i18n-ph="search" placeholder="Buscar…" oninput="renderList()">
+    <span class="grow"></span>
+    <button class="btn sm pri" onclick="editEntry(null)" data-i18n="newEntry">+ Nova entrada</button>
+    <button class="btn sm" onclick="openGen()" data-i18n="generator">Gerador</button>
+    <button class="btn sm" onclick="saveVault()" data-i18n="save">Salvar</button>
+    <button class="btn sm" onclick="openSet()">⚙</button>
+    <button class="btn sm" id="btnLock" onclick="ST.pin?softLock():lockNow()" data-i18n="lock">🔒</button>
+  </div>
+  <div id="main">
+    <div id="list"></div>
+    <div id="empty" data-i18n="selectEntry">Selecione ou crie uma entrada.</div>
+    <div id="detail" class="hidden"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+'use strict';
+// ══ HELPERS ══
+const qs=id=>document.getElementById(id);
+const eh=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ea=eh;
+const enc=new TextEncoder(), dec=new TextDecoder();
+const b64=b=>btoa(String.fromCharCode(...new Uint8Array(b)));
+const unb64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+function toast(msg){const t=qs('toast');t.textContent=msg;t.classList.add('on');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('on'),2200)}
+
+// ══ STATE ══
+const ST={vault:null,key:null,salt:null,iter:0,fileName:'cofre.pfdb',fileHandle:null,rawFile:null,sel:null,dirty:false,lockT:null,pin:null};
+const CFG_KEY='pf_cfg';
+const CFG=Object.assign({theme:'dark',lang:'pt',iter:600000,autolockMin:5,clipSec:20},JSON.parse(localStorage.getItem(CFG_KEY)||'{}'));
+function saveCfg(){localStorage.setItem(CFG_KEY,JSON.stringify(CFG))}
+
+// ══ I18N ══
+const I18N={
+ pt:{openVault:'Abrir cofre',noFile:'Nenhum arquivo selecionado.',chooseFile:'Escolher .pfdb',masterPass:'Senha mestre',unlock:'Desbloquear',createNew:'Criar cofre novo',newVault:'Novo cofre',confirmPass:'Confirmar senha mestre',back:'Voltar',create:'Criar',search:'Buscar…',newEntry:'+ Nova entrada',generator:'Gerador',save:'Salvar',lock:'🔒',selectEntry:'Selecione ou crie uma entrada.',title:'Título',user:'Usuário',pass:'Senha',url:'URL',notes:'Notas',copy:'Copiar',show:'Mostrar',hide:'Ocultar',del:'Excluir',saveEntry:'Salvar entrada',cancel:'Cancelar',copied:'Copiado — limpa em {s}s',clipCleared:'Área de transferência limpa',saved:'Cofre salvo',wrongPass:'Senha incorreta ou arquivo corrompido.',passMismatch:'As senhas não coincidem.',passShort:'Use ao menos 8 caracteres.',needFile:'Escolha um arquivo .pfdb.',confirmDel:'Excluir esta entrada?',locked:'Cofre bloqueado por inatividade',genTitle:'Gerador de senhas',length:'Comprimento',upper:'Maiúsculas',lower:'Minúsculas',digits:'Dígitos',symbols:'Símbolos',passphrase:'Frase-senha',words:'Palavras',regen:'Gerar novamente',use:'Usar no formulário',settings:'Configurações',theme:'Tema',dark:'Escuro',light:'Claro',langL:'Idioma',autolock:'Bloqueio automático (min, 0=off)',clip:'Limpar clipboard após (s)',iterL:'Iterações PBKDF2 (aplicado no próximo salvar)',close:'Fechar',unsaved:'Há alterações não salvas — salve antes de bloquear ou elas serão perdidas.',strength:['Muito fraca','Fraca','Razoável','Forte','Excelente'],pinTitle:'Desbloqueio rápido',pinEnter:'PIN',usePass:'Usar senha mestre',pinLabel:'PIN de desbloqueio rápido (4–8 dígitos; vale só até fechar o app)',pinBad:'PIN deve ter de 4 a 8 dígitos.',pinSet:'PIN ativado',pinOff:'Desativar PIN',pinOffDone:'PIN desativado',pinWrong:'PIN incorreto — {n} tentativa(s) restante(s)',pinLockedOut:'Muitas tentativas — use a senha mestre',hibpBtn:'Verificar se a senha apareceu em vazamentos (Have I Been Pwned)',hibpConsent:'Verificar se esta senha apareceu em vazamentos conhecidos?\n\nComo funciona: a senha é transformada em um código (hash SHA-1) e SOMENTE os 5 primeiros caracteres desse código são enviados ao serviço Have I Been Pwned. A senha em si nunca sai do seu dispositivo.\n\nContinuar?',hibpFound:'⚠ Esta senha apareceu em {n} vazamento(s) — troque-a!',hibpSafe:'✓ Senha não encontrada em vazamentos conhecidos',hibpErr:'Falha na verificação — confira sua conexão'},
+ en:{openVault:'Open vault',noFile:'No file selected.',chooseFile:'Choose .pfdb',masterPass:'Master password',unlock:'Unlock',createNew:'Create new vault',newVault:'New vault',confirmPass:'Confirm master password',back:'Back',create:'Create',search:'Search…',newEntry:'+ New entry',generator:'Generator',save:'Save',lock:'🔒',selectEntry:'Select or create an entry.',title:'Title',user:'Username',pass:'Password',url:'URL',notes:'Notes',copy:'Copy',show:'Show',hide:'Hide',del:'Delete',saveEntry:'Save entry',cancel:'Cancel',copied:'Copied — clears in {s}s',clipCleared:'Clipboard cleared',saved:'Vault saved',wrongPass:'Wrong password or corrupted file.',passMismatch:'Passwords do not match.',passShort:'Use at least 8 characters.',needFile:'Choose a .pfdb file.',confirmDel:'Delete this entry?',locked:'Vault locked due to inactivity',genTitle:'Password generator',length:'Length',upper:'Uppercase',lower:'Lowercase',digits:'Digits',symbols:'Symbols',passphrase:'Passphrase',words:'Words',regen:'Regenerate',use:'Use in form',settings:'Settings',theme:'Theme',dark:'Dark',light:'Light',langL:'Language',autolock:'Auto-lock (min, 0=off)',clip:'Clear clipboard after (s)',iterL:'PBKDF2 iterations (applied on next save)',close:'Close',unsaved:'Unsaved changes — save before locking or they will be lost.',strength:['Very weak','Weak','Fair','Strong','Excellent'],pinTitle:'Quick unlock',pinEnter:'PIN',usePass:'Use master password',pinLabel:'Quick-unlock PIN (4–8 digits; lasts until the app closes)',pinBad:'PIN must be 4 to 8 digits.',pinSet:'PIN enabled',pinOff:'Disable PIN',pinOffDone:'PIN disabled',pinWrong:'Wrong PIN — {n} attempt(s) left',pinLockedOut:'Too many attempts — use the master password',hibpBtn:'Check if this password appeared in breaches (Have I Been Pwned)',hibpConsent:'Check whether this password appeared in known breaches?\n\nHow it works: the password is turned into a code (SHA-1 hash) and ONLY the first 5 characters of that code are sent to the Have I Been Pwned service. The password itself never leaves your device.\n\nContinue?',hibpFound:'⚠ This password appeared in {n} breach(es) — change it!',hibpSafe:'✓ Password not found in known breaches',hibpErr:'Check failed — verify your connection'}
+};
+const T=k=>I18N[CFG.lang][k]??k;
+function applyI18n(){
+  document.documentElement.lang=CFG.lang==='pt'?'pt-br':'en';
+  document.querySelectorAll('[data-i18n]').forEach(el=>el.textContent=T(el.dataset.i18n));
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>el.placeholder=T(el.dataset.i18nPh));
+}
+
+// ══ CRYPTO (.pfdb: MAGIC + JSON{v,iter,salt,iv,ct}) ══
+const MAGIC='PFDB1\n';
+async function deriveKey(pass,salt,iter){
+  const km=await crypto.subtle.importKey('raw',enc.encode(pass),'PBKDF2',false,['deriveKey']);
+  return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:iter,hash:'SHA-256'},km,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);
+}
+async function encryptVault(){
+  const iv=crypto.getRandomValues(new Uint8Array(12));
+  const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},ST.key,enc.encode(JSON.stringify(ST.vault)));
+  return MAGIC+JSON.stringify({v:1,iter:ST.iter,salt:b64(ST.salt),iv:b64(iv),ct:b64(ct)});
+}
+async function decryptVault(text,pass){
+  if(!text.startsWith(MAGIC))throw new Error('badmagic');
+  const h=JSON.parse(text.slice(MAGIC.length));
+  const salt=unb64(h.salt),key=await deriveKey(pass,salt,h.iter);
+  const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(h.iv)},key,unb64(h.ct));
+  return{vault:JSON.parse(dec.decode(pt)),key,salt,iter:h.iter};
+}
+
+// ══ LOCK / UNLOCK ══
+qs('lkFile').addEventListener('change',e=>{
+  const f=e.target.files[0];if(!f)return;
+  ST.fileName=f.name;qs('lkFileName').textContent=f.name;
+  f.text().then(t=>ST.rawFile=t);
+});
+function newVaultUI(){qs('lkOpen').classList.add('hidden');qs('lkNew').classList.remove('hidden');qs('nvPass').focus()}
+qs('nvPass').addEventListener('input',e=>{const s=strength(e.target.value);const m=qs('nvMeter');m.className='meter m'+s.score;m.firstElementChild.style.width=(s.score*25)+'%'});
+async function createVault(){
+  const p=qs('nvPass').value,p2=qs('nvPass2').value,err=qs('nvErr');err.textContent='';
+  if(p.length<8)return err.textContent=T('passShort');
+  if(p!==p2)return err.textContent=T('passMismatch');
+  ST.salt=crypto.getRandomValues(new Uint8Array(16));ST.iter=CFG.iter;
+  ST.key=await deriveKey(p,ST.salt,ST.iter);
+  ST.vault={entries:[]};ST.fileName='cofre.pfdb';ST.fileHandle=null;ST.dirty=true;
+  enterApp();
+}
+async function unlock(){
+  const err=qs('lkErr');err.textContent='';
+  if(!ST.rawFile)return err.textContent=T('needFile');
+  try{
+    const r=await decryptVault(ST.rawFile,qs('lkPass').value);
+    Object.assign(ST,{vault:r.vault,key:r.key,salt:r.salt,iter:r.iter,dirty:false});
+    enterApp();
+  }catch(e){err.textContent=T('wrongPass')}
+}
+function enterApp(){
+  qs('lkPass').value=qs('nvPass').value=qs('nvPass2').value='';
+  qs('lock').style.display='none';qs('app').classList.add('on');
+  renderList();armAutolock();
+}
+function lockNow(){
+  if(ST.dirty&&!confirm(T('unsaved')))return;
+  ST.key=null;ST.vault=null;ST.sel=null;ST.dirty=false;ST.pin=null;
+  clearTimeout(ST.lockT);
+  qs('app').classList.remove('on');qs('lock').style.display='block';
+  qs('detail').classList.add('hidden');qs('empty').classList.remove('hidden');
+  qs('lkPin').classList.add('hidden');qs('lkNew').classList.add('hidden');qs('lkOpen').classList.remove('hidden');
+  qs('lkPass').value='';
+}
+// autolock por inatividade + ao minimizar
+function armAutolock(){
+  clearTimeout(ST.lockT);
+  if(!CFG.autolockMin||!ST.key)return;
+  ST.lockT=setTimeout(()=>{if(ST.key){if(ST.pin)softLock();else{ST.dirty=false;lockNow()}toast(T('locked'))}},CFG.autolockMin*60000);
+}
+['click','keydown','mousemove'].forEach(ev=>document.addEventListener(ev,()=>ST.key&&armAutolock(),{passive:true}));
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&ST.key&&CFG.autolockMin){if(ST.pin)softLock();else if(!ST.dirty)lockNow()}});
+
+// ══ PIN (desbloqueio rápido de sessão — nunca persiste em disco) ══
+const PIN_ITER=100000;
+async function setPin(code){
+  const salt=crypto.getRandomValues(new Uint8Array(16));
+  ST.pin={key:await deriveKey(code,salt,PIN_ITER),salt,blob:null,tries:0};
+}
+// cifra o cofre com a chave do PIN, descarta o cofre da memória e mostra a tela de PIN
+async function softLock(){
+  if(!ST.pin||!ST.key)return lockNow();
+  if(qs('modal'))closeModal();
+  const iv=crypto.getRandomValues(new Uint8Array(12));
+  const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},ST.pin.key,enc.encode(JSON.stringify({vault:ST.vault,dirty:ST.dirty})));
+  ST.pin.blob={iv,ct};ST.pin.key=null;ST.pin.tries=0;
+  ST.vault=null;ST.sel=null;
+  clearTimeout(ST.lockT);
+  qs('app').classList.remove('on');qs('lock').style.display='block';
+  qs('detail').classList.add('hidden');qs('empty').classList.remove('hidden');
+  qs('lkOpen').classList.add('hidden');qs('lkNew').classList.add('hidden');qs('lkPin').classList.remove('hidden');
+  qs('pinIn').value='';qs('pinErr').textContent='';
+  qs('pinIn').focus();
+}
+async function pinUnlock(){
+  const err=qs('pinErr');err.textContent='';
+  try{
+    const key=await deriveKey(qs('pinIn').value,ST.pin.salt,PIN_ITER);
+    const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:ST.pin.blob.iv},key,ST.pin.blob.ct);
+    const s=JSON.parse(dec.decode(pt));
+    ST.vault=s.vault;ST.dirty=s.dirty;
+    ST.pin.key=key;ST.pin.blob=null;ST.pin.tries=0;
+    qs('lkPin').classList.add('hidden');qs('lkOpen').classList.remove('hidden');
+    enterApp();
+  }catch(e){
+    qs('pinIn').value='';
+    ST.pin.tries++;
+    if(ST.pin.tries>=3){toast(T('pinLockedOut'));pinToFull()}
+    else err.textContent=T('pinWrong').replace('{n}',3-ST.pin.tries);
+  }
+}
+// abandona a sessão de PIN e exige a senha mestre (alterações não salvas são descartadas)
+function pinToFull(){ST.pin=null;ST.dirty=false;lockNow()}
+
+// ══ SAVE (.pfdb via FS Access API, fallback download) ══
+async function saveVault(){
+  const data=await encryptVault();
+  try{
+    if(!ST.fileHandle&&window.showSaveFilePicker){
+      ST.fileHandle=await showSaveFilePicker({suggestedName:ST.fileName,types:[{description:'PassForge Vault',accept:{'application/octet-stream':['.pfdb']}}]});
+    }
+    if(ST.fileHandle){
+      const w=await ST.fileHandle.createWritable();await w.write(data);await w.close();
+    }else{
+      const a=document.createElement('a');
+      a.href=URL.createObjectURL(new Blob([data],{type:'application/octet-stream'}));
+      a.download=ST.fileName;a.click();URL.revokeObjectURL(a.href);
+    }
+    ST.rawFile=data;ST.dirty=false;toast(T('saved'));
+  }catch(e){if(e.name!=='AbortError')toast('Erro: '+e.message)}
+}
+
+// ══ ENTRIES ══
+function renderList(){
+  const q=qs('search').value.toLowerCase();
+  const es=(ST.vault?.entries||[]).filter(e=>!q||(e.title+' '+e.user+' '+e.url).toLowerCase().includes(q))
+    .sort((a,b)=>a.title.localeCompare(b.title));
+  qs('list').innerHTML=es.map(e=>`<div class="ent${e.id===ST.sel?' sel':''}" onclick="openEntry('${e.id}')"><div class="t">${eh(e.title)}</div><div class="u">${eh(e.user)}</div></div>`).join('');
+}
+function openEntry(id){ST.sel=id;renderList();const e=ST.vault.entries.find(x=>x.id===id);if(e)editEntry(e)}
+function editEntry(e){
+  ST.sel=e?.id||null;renderList();
+  qs('empty').classList.add('hidden');
+  const d=qs('detail');d.classList.remove('hidden');
+  d.innerHTML=`
+    <label>${T('title')}</label><input id="eT" value="${ea(e?.title||'')}">
+    <label>${T('user')}</label>
+    <div class="row"><input id="eU" class="grow" value="${ea(e?.user||'')}"><button class="btn sm" onclick="copySec(qs('eU').value)">${T('copy')}</button></div>
+    <label>${T('pass')}</label>
+    <div class="row">
+      <input id="eP" class="grow" type="password" value="${ea(e?.pass||'')}" oninput="updMeter(this.value)">
+      <button class="btn sm" id="ePv" onclick="togglePw()">${T('show')}</button>
+      <button class="btn sm" onclick="copySec(qs('eP').value)">${T('copy')}</button>
+      <button class="btn sm" onclick="openGen(true)">🎲</button>
+      <button class="btn sm" id="eHibp" onclick="checkPwned()" title="${ea(T('hibpBtn'))}">🛡</button>
+    </div>
+    <div class="meter" id="eMeter"><i></i></div>
+    <label>${T('url')}</label><input id="eL" value="${ea(e?.url||'')}">
+    <label>${T('notes')}</label><textarea id="eN" rows="4">${eh(e?.notes||'')}</textarea>
+    <div class="row" style="margin-top:16px">
+      <button class="btn pri" onclick="saveEntry('${e?.id||''}')">${T('saveEntry')}</button>
+      ${e?`<button class="btn danger" onclick="delEntry('${e.id}')">${T('del')}</button>`:''}
+      <button class="btn" onclick="closeDetail()">${T('cancel')}</button>
+    </div>`;
+  updMeter(e?.pass||'');
+  qs('eT').focus();
+}
+function togglePw(){const p=qs('eP');const show=p.type==='password';p.type=show?'text':'password';qs('ePv').textContent=T(show?'hide':'show')}
+function updMeter(v){const s=strength(v);const m=qs('eMeter');if(!m)return;m.className='meter m'+s.score;m.firstElementChild.style.width=(s.score*25)+'%'}
+function closeDetail(){ST.sel=null;renderList();qs('detail').classList.add('hidden');qs('empty').classList.remove('hidden')}
+function saveEntry(id){
+  const v={title:qs('eT').value.trim()||'—',user:qs('eU').value,pass:qs('eP').value,url:qs('eL').value,notes:qs('eN').value,updated:Date.now()};
+  if(id){Object.assign(ST.vault.entries.find(x=>x.id===id),v)}
+  else{ST.vault.entries.push(Object.assign({id:crypto.randomUUID(),created:Date.now()},v))}
+  ST.dirty=true;closeDetail();
+}
+function delEntry(id){
+  if(!confirm(T('confirmDel')))return;
+  ST.vault.entries=ST.vault.entries.filter(x=>x.id!==id);ST.dirty=true;closeDetail();
+}
+
+// ══ CLIPBOARD (limpeza automática) ══
+let clipT=null;
+async function copySec(text){
+  if(!text)return;
+  await navigator.clipboard.writeText(text);
+  toast(T('copied').replace('{s}',CFG.clipSec));
+  clearTimeout(clipT);
+  clipT=setTimeout(async()=>{
+    try{if(await navigator.clipboard.readText()===text){await navigator.clipboard.writeText('');toast(T('clipCleared'))}}
+    catch(e){await navigator.clipboard.writeText('').catch(()=>{});}
+  },CFG.clipSec*1000);
+}
+
+// ══ GERADOR ══
+const WORDS='abacaxi banana cereja damasco espiga figo goiaba inhame jaca kiwi limao manga nectarina oliva pera quiabo romã salsa tomate uva vagem xerife zebra amarelo azul branco cinza dourado escuro fosco gelado intenso jovem leve macio nobre opaco pálido quente rígido sólido tenro único vivo alegre bravo calmo doce esperto forte gentil humilde justo leal maduro nobre otimista paciente quieto rápido sábio tranquilo valente zeloso âncora bússola castelo dragão estrela farol guitarra harpa ilha jardim lago montanha nuvem oceano ponte quadro rio sol trovão vulcão janela abrigo brisa chuva duna eco floresta granito horizonte iceberg jasmim lousa madeira neblina orvalho penhasco quartzo raiz semente trilha universo vento'.split(/\s+/);
+function rnd(n){const a=new Uint32Array(1);let r;do{crypto.getRandomValues(a);r=a[0]}while(r>=Math.floor(0xFFFFFFFF/n)*n);return r%n}
+function genPassword(len,sets){
+  const pool=sets.join('');if(!pool)return'';
+  // garante 1 de cada classe marcada
+  let out=sets.map(s=>s[rnd(s.length)]);
+  while(out.length<len)out.push(pool[rnd(pool.length)]);
+  for(let i=out.length-1;i>0;i--){const j=rnd(i+1);[out[i],out[j]]=[out[j],out[i]]}
+  return out.slice(0,len).join('');
+}
+function genPassphrase(n){return Array.from({length:n},()=>WORDS[rnd(WORDS.length)]).join('-')}
+function strength(p){
+  if(!p)return{score:0,label:''};
+  let pool=0;
+  if(/[a-z]/.test(p))pool+=26; if(/[A-Z]/.test(p))pool+=26;
+  if(/\d/.test(p))pool+=10; if(/[^a-zA-Z0-9]/.test(p))pool+=32;
+  const bits=p.length*Math.log2(pool||1);
+  const score=bits<28?1:bits<45?2:bits<70?3:4;
+  return{score,bits:Math.round(bits),label:T('strength')[score]};
+}
+let genTarget=false;
+function openGen(target){
+  genTarget=!!target;
+  showModal(`
+    <h2>${T('genTitle')}</h2>
+    <div class="card" style="background:var(--card2);padding:12px"><span id="genOut"></span></div>
+    <div class="meter" id="gMeter"><i></i></div>
+    <p class="muted" id="gBits"></p>
+    <label>${T('length')}: <b id="gLenV">20</b></label>
+    <input type="range" id="gLen" min="8" max="64" value="20" oninput="qs('gLenV').textContent=this.value;regen()">
+    <div style="margin:10px 0">
+      <span class="chk"><input type="checkbox" id="gU" checked onchange="regen()">${T('upper')}</span>
+      <span class="chk"><input type="checkbox" id="gL2" checked onchange="regen()">${T('lower')}</span>
+      <span class="chk"><input type="checkbox" id="gD" checked onchange="regen()">${T('digits')}</span>
+      <span class="chk"><input type="checkbox" id="gS" checked onchange="regen()">${T('symbols')}</span>
+    </div>
+    <div style="margin:10px 0">
+      <span class="chk"><input type="checkbox" id="gPh" onchange="regen()">${T('passphrase')}</span>
+      <span class="chk">${T('words')}: <input type="number" id="gW" value="5" min="3" max="10" style="width:64px" onchange="regen()"></span>
+    </div>
+    <div class="row" style="margin-top:14px">
+      <button class="btn" onclick="regen()">🎲 ${T('regen')}</button>
+      <button class="btn" onclick="copySec(qs('genOut').textContent)">${T('copy')}</button>
+      ${genTarget?`<button class="btn pri" onclick="qs('eP').value=qs('genOut').textContent;updMeter(qs('eP').value);closeModal()">${T('use')}</button>`:''}
+      <span class="grow"></span>
+      <button class="btn" onclick="closeModal()">${T('close')}</button>
+    </div>`);
+  regen();
+}
+function regen(){
+  let p;
+  if(qs('gPh').checked){p=genPassphrase(+qs('gW').value)}
+  else{
+    const sets=[];
+    if(qs('gU').checked)sets.push('ABCDEFGHJKLMNPQRSTUVWXYZ');
+    if(qs('gL2').checked)sets.push('abcdefghijkmnopqrstuvwxyz');
+    if(qs('gD').checked)sets.push('23456789');
+    if(qs('gS').checked)sets.push('!@#$%&*+-=?_~');
+    p=genPassword(+qs('gLen').value,sets);
+  }
+  qs('genOut').textContent=p;
+  const s=strength(p);
+  qs('gMeter').className='meter m'+s.score;
+  qs('gMeter').firstElementChild.style.width=(s.score*25)+'%';
+  qs('gBits').textContent=p?`~${s.bits} bits · ${s.label}`:'';
+}
+
+// ══ HIBP (verificação de vazamentos — k-anonymity, só quando o usuário aciona) ══
+async function checkPwned(){
+  const pw=qs('eP').value;if(!pw)return;
+  if(!CFG.hibpOk){if(!confirm(T('hibpConsent')))return;CFG.hibpOk=true;saveCfg()}
+  const btn=qs('eHibp');btn.disabled=true;btn.textContent='…';
+  try{
+    const h=[...new Uint8Array(await crypto.subtle.digest('SHA-1',enc.encode(pw)))]
+      .map(b=>b.toString(16).padStart(2,'0')).join('').toUpperCase();
+    // k-anonymity: só o prefixo de 5 caracteres sai do dispositivo; Add-Padding
+    // faz o servidor devolver entradas falsas p/ o tamanho da resposta não vazar nada
+    const r=await fetch('https://api.pwnedpasswords.com/range/'+h.slice(0,5),{headers:{'Add-Padding':'true'}});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const hit=(await r.text()).split(/\r?\n/).find(l=>l.startsWith(h.slice(5)+':'));
+    const n=hit?parseInt(hit.split(':')[1],10):0;
+    toast(n>0?T('hibpFound').replace('{n}',n.toLocaleString()):T('hibpSafe'));
+  }catch(e){toast(T('hibpErr'))}
+  btn.disabled=false;btn.textContent='🛡';
+}
+
+// ══ SETTINGS ══
+function openSet(){
+  showModal(`
+    <h2>${T('settings')}</h2>
+    <label>${T('theme')}</label>
+    <select id="sTheme"><option value="dark"${CFG.theme==='dark'?' selected':''}>${T('dark')}</option><option value="light"${CFG.theme==='light'?' selected':''}>${T('light')}</option></select>
+    <label>${T('langL')}</label>
+    <select id="sLang"><option value="pt"${CFG.lang==='pt'?' selected':''}>Português</option><option value="en"${CFG.lang==='en'?' selected':''}>English</option></select>
+    <label>${T('autolock')}</label><input type="number" id="sLock" min="0" max="120" value="${CFG.autolockMin}">
+    <label>${T('clip')}</label><input type="number" id="sClip" min="5" max="120" value="${CFG.clipSec}">
+    <label>${T('iterL')}</label><input type="number" id="sIter" min="100000" step="100000" value="${CFG.iter}">
+    <label>${T('pinLabel')}</label>
+    <div class="row">
+      <input id="sPin" type="password" inputmode="numeric" autocomplete="off" class="grow" placeholder="${ST.pin?'••••':''}">
+      ${ST.pin?`<button class="btn sm" onclick="ST.pin=null;qs('sPin').placeholder='';toast(T('pinOffDone'))">${T('pinOff')}</button>`:''}
+    </div>
+    <div class="row" style="margin-top:14px">
+      <button class="btn pri" onclick="applySet()">OK</button>
+      <button class="btn" onclick="closeModal()">${T('cancel')}</button>
+    </div>`);
+}
+async function applySet(){
+  const pin=qs('sPin').value.trim();
+  if(pin){
+    if(!/^\d{4,8}$/.test(pin))return toast(T('pinBad'));
+    await setPin(pin);toast(T('pinSet'));
+  }
+  CFG.theme=qs('sTheme').value;CFG.lang=qs('sLang').value;
+  CFG.autolockMin=+qs('sLock').value;CFG.clipSec=+qs('sClip').value;CFG.iter=+qs('sIter').value;
+  saveCfg();applyTheme();applyI18n();armAutolock();closeModal();
+}
+function applyTheme(){document.documentElement.dataset.theme=CFG.theme}
+
+// ══ MODAL ══
+function showModal(html){
+  closeModal();
+  const m=document.createElement('div');m.className='modal';m.id='modal';
+  m.innerHTML=`<div class="card">${html}</div>`;
+  m.addEventListener('click',e=>{if(e.target===m)closeModal()});
+  document.body.appendChild(m);
+}
+function closeModal(){qs('modal')?.remove()}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+
+// ══ INIT ══
+window.addEventListener('beforeunload',e=>{if(ST.dirty){e.preventDefault();e.returnValue=''}});
+applyTheme();applyI18n();
+</script>
+</body>
+</html>
