@@ -169,8 +169,8 @@ function saveCfg(){localStorage.setItem(CFG_KEY,JSON.stringify(CFG))}
 
 // ══ I18N ══
 const I18N={
- pt:{openVault:'Abrir cofre',noFile:'Nenhum arquivo selecionado.',chooseFile:'Escolher .pfdb',masterPass:'Senha mestre',unlock:'Desbloquear',createNew:'Criar cofre novo',newVault:'Novo cofre',confirmPass:'Confirmar senha mestre',back:'Voltar',create:'Criar',search:'Buscar…',newEntry:'+ Nova entrada',generator:'Gerador',save:'Salvar',lock:'🔒',selectEntry:'Selecione ou crie uma entrada.',title:'Título',user:'Usuário',pass:'Senha',url:'URL',notes:'Notas',copy:'Copiar',show:'Mostrar',hide:'Ocultar',del:'Excluir',saveEntry:'Salvar entrada',cancel:'Cancelar',copied:'Copiado — limpa em {s}s',clipCleared:'Área de transferência limpa',saved:'Cofre salvo',wrongPass:'Senha incorreta ou arquivo corrompido.',passMismatch:'As senhas não coincidem.',passShort:'Use ao menos 8 caracteres.',needFile:'Escolha um arquivo .pfdb.',confirmDel:'Excluir esta entrada?',locked:'Cofre bloqueado por inatividade',genTitle:'Gerador de senhas',length:'Comprimento',upper:'Maiúsculas',lower:'Minúsculas',digits:'Dígitos',symbols:'Símbolos',passphrase:'Frase-senha',words:'Palavras',regen:'Gerar novamente',use:'Usar no formulário',settings:'Configurações',theme:'Tema',dark:'Escuro',light:'Claro',langL:'Idioma',autolock:'Bloqueio automático (min, 0=off)',clip:'Limpar clipboard após (s)',iterL:'Iterações PBKDF2 (aplicado no próximo salvar)',close:'Fechar',unsaved:'Há alterações não salvas — salve antes de bloquear ou elas serão perdidas.',strength:['Muito fraca','Fraca','Razoável','Forte','Excelente'],pinTitle:'Desbloqueio rápido',pinEnter:'PIN',usePass:'Usar senha mestre',pinLabel:'PIN de desbloqueio rápido (4–8 dígitos; vale só até fechar o app)',pinBad:'PIN deve ter de 4 a 8 dígitos.',pinSet:'PIN ativado',pinOff:'Desativar PIN',pinOffDone:'PIN desativado',pinWrong:'PIN incorreto — {n} tentativa(s) restante(s)',pinLockedOut:'Muitas tentativas — use a senha mestre',hibpBtn:'Verificar se a senha apareceu em vazamentos (Have I Been Pwned)',hibpConsent:'Verificar se esta senha apareceu em vazamentos conhecidos?\n\nComo funciona: a senha é transformada em um código (hash SHA-1) e SOMENTE os 5 primeiros caracteres desse código são enviados ao serviço Have I Been Pwned. A senha em si nunca sai do seu dispositivo.\n\nContinuar?',hibpFound:'⚠ Esta senha apareceu em {n} vazamento(s) — troque-a!',hibpSafe:'✓ Senha não encontrada em vazamentos conhecidos',hibpErr:'Falha na verificação — confira sua conexão'},
- en:{openVault:'Open vault',noFile:'No file selected.',chooseFile:'Choose .pfdb',masterPass:'Master password',unlock:'Unlock',createNew:'Create new vault',newVault:'New vault',confirmPass:'Confirm master password',back:'Back',create:'Create',search:'Search…',newEntry:'+ New entry',generator:'Generator',save:'Save',lock:'🔒',selectEntry:'Select or create an entry.',title:'Title',user:'Username',pass:'Password',url:'URL',notes:'Notes',copy:'Copy',show:'Show',hide:'Hide',del:'Delete',saveEntry:'Save entry',cancel:'Cancel',copied:'Copied — clears in {s}s',clipCleared:'Clipboard cleared',saved:'Vault saved',wrongPass:'Wrong password or corrupted file.',passMismatch:'Passwords do not match.',passShort:'Use at least 8 characters.',needFile:'Choose a .pfdb file.',confirmDel:'Delete this entry?',locked:'Vault locked due to inactivity',genTitle:'Password generator',length:'Length',upper:'Uppercase',lower:'Lowercase',digits:'Digits',symbols:'Symbols',passphrase:'Passphrase',words:'Words',regen:'Regenerate',use:'Use in form',settings:'Settings',theme:'Theme',dark:'Dark',light:'Light',langL:'Language',autolock:'Auto-lock (min, 0=off)',clip:'Clear clipboard after (s)',iterL:'PBKDF2 iterations (applied on next save)',close:'Close',unsaved:'Unsaved changes — save before locking or they will be lost.',strength:['Very weak','Weak','Fair','Strong','Excellent'],pinTitle:'Quick unlock',pinEnter:'PIN',usePass:'Use master password',pinLabel:'Quick-unlock PIN (4–8 digits; lasts until the app closes)',pinBad:'PIN must be 4 to 8 digits.',pinSet:'PIN enabled',pinOff:'Disable PIN',pinOffDone:'PIN disabled',pinWrong:'Wrong PIN — {n} attempt(s) left',pinLockedOut:'Too many attempts — use the master password',hibpBtn:'Check if this password appeared in breaches (Have I Been Pwned)',hibpConsent:'Check whether this password appeared in known breaches?\n\nHow it works: the password is turned into a code (SHA-1 hash) and ONLY the first 5 characters of that code are sent to the Have I Been Pwned service. The password itself never leaves your device.\n\nContinue?',hibpFound:'⚠ This password appeared in {n} breach(es) — change it!',hibpSafe:'✓ Password not found in known breaches',hibpErr:'Check failed — verify your connection'}
+ pt:{openVault:'Abrir cofre',noFile:'Nenhum arquivo selecionado.',chooseFile:'Escolher .pfdb',masterPass:'Senha mestre',unlock:'Desbloquear',createNew:'Criar cofre novo',newVault:'Novo cofre',confirmPass:'Confirmar senha mestre',back:'Voltar',create:'Criar',search:'Buscar…',newEntry:'+ Nova entrada',generator:'Gerador',save:'Salvar',lock:'🔒',selectEntry:'Selecione ou crie uma entrada.',title:'Título',user:'Usuário',pass:'Senha',url:'URL',notes:'Notas',copy:'Copiar',show:'Mostrar',hide:'Ocultar',del:'Excluir',saveEntry:'Salvar entrada',cancel:'Cancelar',copied:'Copiado — limpa em {s}s',clipCleared:'Área de transferência limpa',saved:'Cofre salvo',wrongPass:'Senha incorreta ou arquivo corrompido.',passMismatch:'As senhas não coincidem.',passShort:'Use ao menos 8 caracteres.',needFile:'Escolha um arquivo .pfdb.',confirmDel:'Excluir esta entrada?',locked:'Cofre bloqueado por inatividade',genTitle:'Gerador de senhas',length:'Comprimento',upper:'Maiúsculas',lower:'Minúsculas',digits:'Dígitos',symbols:'Símbolos',passphrase:'Frase-senha',words:'Palavras',regen:'Gerar novamente',use:'Usar no formulário',settings:'Configurações',theme:'Tema',dark:'Escuro',light:'Claro',langL:'Idioma',autolock:'Bloqueio automático (min, 0=off)',clip:'Limpar clipboard após (s)',iterL:'Iterações PBKDF2 (aplicado no próximo salvar)',close:'Fechar',unsaved:'Há alterações não salvas — salve antes de bloquear ou elas serão perdidas.',strength:['Muito fraca','Fraca','Razoável','Forte','Excelente'],pinTitle:'Desbloqueio rápido',pinEnter:'PIN',usePass:'Usar senha mestre',pinLabel:'PIN de desbloqueio rápido (4–8 dígitos; vale só até fechar o app)',pinBad:'PIN deve ter de 4 a 8 dígitos.',pinSet:'PIN ativado',pinOff:'Desativar PIN',pinOffDone:'PIN desativado',pinWrong:'PIN incorreto — {n} tentativa(s) restante(s)',pinLockedOut:'Muitas tentativas — use a senha mestre',hibpBtn:'Verificar se a senha apareceu em vazamentos (Have I Been Pwned)',hibpConsent:'Verificar se esta senha apareceu em vazamentos conhecidos?\n\nComo funciona: a senha é transformada em um código (hash SHA-1) e SOMENTE os 5 primeiros caracteres desse código são enviados ao serviço Have I Been Pwned. A senha em si nunca sai do seu dispositivo.\n\nContinuar?',hibpFound:'⚠ Esta senha apareceu em {n} vazamento(s) — troque-a!',hibpSafe:'✓ Senha não encontrada em vazamentos conhecidos',hibpErr:'Falha na verificação — confira sua conexão',csvTitle:'Importar / Exportar CSV',csvExport:'Exportar CSV',csvImport:'Importar CSV',csvExpWarn:'ATENÇÃO: o arquivo CSV exportado contém suas senhas SEM criptografia, em texto puro. Guarde-o com cuidado e apague-o depois de usar.\n\nExportar mesmo assim?',csvExpDone:'CSV exportado — apague o arquivo após o uso',csvImpDone:'{n} entrada(s) importada(s) — salve o cofre',csvBad:'CSV inválido — precisa de cabeçalho com coluna de senha'},
+ en:{openVault:'Open vault',noFile:'No file selected.',chooseFile:'Choose .pfdb',masterPass:'Master password',unlock:'Unlock',createNew:'Create new vault',newVault:'New vault',confirmPass:'Confirm master password',back:'Back',create:'Create',search:'Search…',newEntry:'+ New entry',generator:'Generator',save:'Save',lock:'🔒',selectEntry:'Select or create an entry.',title:'Title',user:'Username',pass:'Password',url:'URL',notes:'Notes',copy:'Copy',show:'Show',hide:'Hide',del:'Delete',saveEntry:'Save entry',cancel:'Cancel',copied:'Copied — clears in {s}s',clipCleared:'Clipboard cleared',saved:'Vault saved',wrongPass:'Wrong password or corrupted file.',passMismatch:'Passwords do not match.',passShort:'Use at least 8 characters.',needFile:'Choose a .pfdb file.',confirmDel:'Delete this entry?',locked:'Vault locked due to inactivity',genTitle:'Password generator',length:'Length',upper:'Uppercase',lower:'Lowercase',digits:'Digits',symbols:'Symbols',passphrase:'Passphrase',words:'Words',regen:'Regenerate',use:'Use in form',settings:'Settings',theme:'Theme',dark:'Dark',light:'Light',langL:'Language',autolock:'Auto-lock (min, 0=off)',clip:'Clear clipboard after (s)',iterL:'PBKDF2 iterations (applied on next save)',close:'Close',unsaved:'Unsaved changes — save before locking or they will be lost.',strength:['Very weak','Weak','Fair','Strong','Excellent'],pinTitle:'Quick unlock',pinEnter:'PIN',usePass:'Use master password',pinLabel:'Quick-unlock PIN (4–8 digits; lasts until the app closes)',pinBad:'PIN must be 4 to 8 digits.',pinSet:'PIN enabled',pinOff:'Disable PIN',pinOffDone:'PIN disabled',pinWrong:'Wrong PIN — {n} attempt(s) left',pinLockedOut:'Too many attempts — use the master password',hibpBtn:'Check if this password appeared in breaches (Have I Been Pwned)',hibpConsent:'Check whether this password appeared in known breaches?\n\nHow it works: the password is turned into a code (SHA-1 hash) and ONLY the first 5 characters of that code are sent to the Have I Been Pwned service. The password itself never leaves your device.\n\nContinue?',hibpFound:'⚠ This password appeared in {n} breach(es) — change it!',hibpSafe:'✓ Password not found in known breaches',hibpErr:'Check failed — verify your connection',csvTitle:'Import / Export CSV',csvExport:'Export CSV',csvImport:'Import CSV',csvExpWarn:'WARNING: the exported CSV file contains your passwords UNENCRYPTED, in plain text. Store it carefully and delete it after use.\n\nExport anyway?',csvExpDone:'CSV exported — delete the file after use',csvImpDone:'{n} entry(ies) imported — save the vault',csvBad:'Invalid CSV — needs a header with a password column'}
 };
 const T=k=>I18N[CFG.lang][k]??k;
 function applyI18n(){
@@ -455,6 +455,62 @@ async function checkPwned(){
   btn.disabled=false;btn.textContent='🛡';
 }
 
+// ══ CSV (importar/exportar — exportação é texto puro, sempre avisar) ══
+const csvEsc=v=>{v=String(v??'');return /[",\n\r]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};
+function exportCsv(){
+  if(!confirm(T('csvExpWarn')))return;
+  const rows=[['title','username','password','url','notes'],
+    ...ST.vault.entries.map(e=>[e.title,e.user,e.pass,e.url,e.notes])];
+  const csv=rows.map(r=>r.map(csvEsc).join(',')).join('\r\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv'}));
+  a.download='passforge-export.csv';a.click();URL.revokeObjectURL(a.href);
+  toast(T('csvExpDone'));
+}
+function parseCsv(text){
+  const rows=[];let row=[],f='',q=false;
+  text=text.replace(/^\ufeff/,'');
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(q){if(c==='"'){if(text[i+1]==='"'){f+='"';i++}else q=false}else f+=c}
+    else if(c==='"')q=true;
+    else if(c===','){row.push(f);f=''}
+    else if(c==='\n'||c==='\r'){
+      if(c==='\r'&&text[i+1]==='\n')i++;
+      row.push(f);f='';
+      if(row.length>1||row[0].trim()!=='')rows.push(row);
+      row=[];
+    }
+    else f+=c;
+  }
+  if(f!==''||row.length){row.push(f);if(row.length>1||row[0].trim()!=='')rows.push(row)}
+  return rows;
+}
+async function importCsv(file){
+  if(!file)return;
+  const rows=parseCsv(await file.text());
+  if(rows.length<2)return toast(T('csvBad'));
+  const hd=rows[0].map(h=>h.trim().toLowerCase());
+  const col=names=>hd.findIndex(h=>names.includes(h));
+  // cabeçalhos aceitos: PassForge, Chrome, Firefox, Bitwarden e afins
+  const iT=col(['title','name','nome','título','titulo']),
+        iU=col(['username','user','login','login_username','usuário','usuario']),
+        iP=col(['password','pass','login_password','senha']),
+        iL=col(['url','website','site','login_uri','web site']),
+        iN=col(['notes','note','notas','observações','obs']);
+  if(iP<0)return toast(T('csvBad'));
+  let n=0;
+  for(const r of rows.slice(1)){
+    if(!r.some(v=>v.trim()))continue;
+    ST.vault.entries.push({id:crypto.randomUUID(),created:Date.now(),updated:Date.now(),
+      title:(iT>=0&&r[iT]?.trim())||'—',user:(iU>=0&&r[iU])||'',pass:r[iP]||'',
+      url:(iL>=0&&r[iL])||'',notes:(iN>=0&&r[iN])||''});
+    n++;
+  }
+  ST.dirty=true;renderList();closeModal();
+  toast(T('csvImpDone').replace('{n}',n));
+}
+
 // ══ SETTINGS ══
 function openSet(){
   showModal(`
@@ -470,6 +526,12 @@ function openSet(){
     <div class="row">
       <input id="sPin" type="password" inputmode="numeric" autocomplete="off" class="grow" placeholder="${ST.pin?'••••':''}">
       ${ST.pin?`<button class="btn sm" onclick="ST.pin=null;qs('sPin').placeholder='';toast(T('pinOffDone'))">${T('pinOff')}</button>`:''}
+    </div>
+    <label>${T('csvTitle')}</label>
+    <div class="row">
+      <button class="btn sm" onclick="exportCsv()">${T('csvExport')}</button>
+      <button class="btn sm" onclick="qs('csvFile').click()">${T('csvImport')}</button>
+      <input type="file" id="csvFile" accept=".csv,text/csv" class="hidden" onchange="importCsv(this.files[0])">
     </div>
     <div class="row" style="margin-top:14px">
       <button class="btn pri" onclick="applySet()">OK</button>
